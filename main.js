@@ -7,7 +7,7 @@ function btnClick(i,j){
         if(!btnClickFlag){
             btnClickPlace[0]=i;
             btnClickPlace[1]=j;
-            document.getElementById("cell_"+i+"_"+j).style.backgroundColor="#00ffff"
+            document.getElementById("cell_"+i+"_"+j).style.backgroundColor="#EEEE00"
         }
         else{
             gamefield.move(btnClickPlace[1],btnClickPlace[0],j,i)

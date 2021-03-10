@@ -148,7 +148,20 @@ class Field{
         for(var i=0;i<this.size[0];i++){
             content+="<tr>"
             for(var j=0;j<this.size[1];j++){
-                content+=("<td><button id='cell_"+i+"_"+j+"' class='cell' onclick=btnClick("+i+","+j+")>"+this.f[i][j]+"</button></td>")
+                var c_color;
+                switch(this.f[i][j].turn){
+                    case 0:
+                        c_color="color0"
+                        break;
+                    case 1:
+                        c_color="color1"
+                        break;
+                    default:
+                        c_color="colord"
+                        break;
+                }
+
+                content+=("<td><button id='cell_"+i+"_"+j+"' class='cell "+c_color+"' onclick=btnClick("+i+","+j+")>"+this.f[i][j]+"</button></td>")
             }
             content+="</tr>"
         }
