@@ -62,6 +62,16 @@ class Field{
 
     }
 
+    stdMove(x,y,mx,my,p){
+        var ntype=p.type
+        console.log(ntype)
+        if(ntype==1&&((p.turn==0&&my==this.size[0]-1)||(p.turn==1&&my==0))){
+            ntype=2
+        }
+        this.f[my][mx]=new Piece(p.turn,ntype,p.state,mx,my);
+        this.f[y][x]=new Piece(null,0,null,x,y);
+    }
+
     move(x,y,mx,my){
         if(this.isFieldRange(x,y)&&this.isFieldRange(mx,my)){
             var p=this.f[y][x];
@@ -70,15 +80,13 @@ class Field{
                 if(p.turn==this.turn){
                     if(p.isVec(mx-x+1,my-y+1)){
                         if(p0.type==0){
-                            this.f[my][mx]=new Piece(p.turn,p.type,p.state,mx,my);
-                            this.f[y][x]=new Piece(null,0,null,x,y);
+                            this.stdMove(x,y,mx,my,p);
                             this.turn=(this.turn+1)%2
                             return true
                         }
                         else if(p0.turn!=p.turn){
                             if(p0.state<p.state){
-                                this.f[my][mx]=new Piece(p.turn,p.type,p.state,mx,my);
-                                this.f[y][x]=new Piece(null,0,null,x,y);
+                                this.stdMove(x,y,mx,my,p);
                                 this.turn=(this.turn+1)%2
                                 return true
                             }
