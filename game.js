@@ -37,7 +37,7 @@ class Field{
         for(var i=0;i<this.size[0];i++){
             var f0=[];
             for(var j=0;j<this.size[1];j++){
-                f0.push(new Piece(null,0,null,i,j));
+                f0.push(new Piece(null,0,null,i,j,false));
             }
             this.f.push(f0);
         }
@@ -55,8 +55,8 @@ class Field{
 
         for(var i=0;i<init_piece.length;i++){
             for(var j=0;j<this.size[1];j++){
-                this.f[i][j]=new Piece(0,init_piece[i][j],init_state[0][i][j],j,i);
-                this.f[this.size[0]-i-1][j]=new Piece(1,init_piece[i][j],init_state[1][i][j],j,this.size[0]-i-1);
+                this.f[i][j]=new Piece(0,init_piece[i][j],init_state[0][i][j],j,i,false);
+                this.f[this.size[0]-i-1][j]=new Piece(1,init_piece[i][j],init_state[1][i][j],j,this.size[0]-i-1,false);
             }
         }
 
@@ -64,12 +64,23 @@ class Field{
 
     stdMove(x,y,mx,my,p){
         var ntype=p.type
-        console.log(ntype)
-        if(ntype==1&&((p.turn==0&&my==this.size[0]-1)||(p.turn==1&&my==0))){
-            ntype=2
+        var nstate=p.state
+        var nbflag=p.bflag
+        if(!nbflag&&((p.turn==0&&my==this.size[0]-1)||(p.turn==1&&my==0))){
+            if(ntype==1){
+                ntype=2
+                nbflag=true;
+            }
+            else if(ntype==2||ntype==3){
+                nstate+=2
+                if(nstate>9){
+                    nstate=9
+                }
+                nbflag=true;
+            }
         }
-        this.f[my][mx]=new Piece(p.turn,ntype,p.state,mx,my);
-        this.f[y][x]=new Piece(null,0,null,x,y);
+        this.f[my][mx]=new Piece(p.turn,ntype,nstate,mx,my,nbflag);
+        this.f[y][x]=new Piece(null,0,null,x,y,false);
     }
 
     move(x,y,mx,my){
@@ -86,6 +97,8 @@ class Field{
                         }
                         else if(p0.turn!=p.turn){
                             if(p0.state<p.state){
+                                p.state++
+                                if(p.state>9)p.state=9
                                 this.stdMove(x,y,mx,my,p);
                                 this.turn=(this.turn+1)%2
                                 return true
@@ -177,13 +190,15 @@ class Piece{
     state=0;
     x=0;
     y=0;
+    bflag=false;
 
-    constructor(turn,type,state,x,y){
+    constructor(turn,type,state,x,y,bflag){
         this.turn=turn;
         this.type=type;
         this.state=state;
         this.x=x;
         this.y=y;
+        this.bflag=bflag;
     }
 
     isVec(dx,dy){
