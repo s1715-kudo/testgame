@@ -3,7 +3,7 @@ var btnClickPlace=[-1,-1];
 var gamefield=new Field();
 
 function btnClick(i,j){
-    if(gamefield.isPieceC()==-1){
+    if(gamefield.isPieceA()==-1){
         if(!btnClickFlag){
             btnClickPlace[0]=i;
             btnClickPlace[1]=j;
@@ -12,7 +12,7 @@ function btnClick(i,j){
         else{
             gamefield.move(btnClickPlace[1],btnClickPlace[0],j,i)
             gamefield.display("message","game")
-            switch(gamefield.isPieceC()){
+            switch(gamefield.isPieceA()){
                 case 0:
                     document.getElementById("message").innerHTML="1の勝ち"
                     break;

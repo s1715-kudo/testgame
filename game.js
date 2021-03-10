@@ -2,41 +2,28 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
-function initState(size){
-    var init_state=[]
-    var s0_sum=0;
-    var N=9;
-    while(s0_sum<25){
-        var s0=[];
-        for(var i=0;i<size;i++){
-            s0.push(getRandomInt(N)+1);
-        }
-        init_state.push(s0);
-        s0_sum=arraySum(s0);
-    }
-
-    var flag=true
-    while(flag){
-        var s0=[];
-        var maxn=s0_sum;
-        for(var i=0;i<size-1;i++){
-            var n=getRandomInt(N)+1
-            maxn-=n;
-            s0.push(n);
-        }
-        if(maxn>0&&maxn<=N){
-            s0.push(maxn);
-            flag=false;
-            init_state.push(s0)
-        }
-    }
-
-    return init_state 
-}
-
 function arraySum(array){
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
     return array.reduce(reducer)
+}
+
+function arrayCreate(start,end){
+    var array=[];
+    for(i=start;i<=end;i++){
+        array.push(i);
+    }
+    return array;
+}
+
+function arrayShuffle(array){
+    var newArray = [];
+    while (array.length > 0) {
+        n = array.length;
+        k = Math.floor(Math.random() * n);
+        newArray.push(array[k]);
+        array.splice(k, 1);
+    }
+    return newArray
 }
 
 class Field{
@@ -44,7 +31,7 @@ class Field{
     size=[];
     turn=0;
     constructor(){
-        this.size=[5,5];
+        this.size=[10,5];
         this.turn=0;
         
         for(var i=0;i<this.size[0];i++){
@@ -54,14 +41,25 @@ class Field{
             }
             this.f.push(f0);
         }
+        this.init()
+    }
 
-        var init_state=initState(this.size[1]);
-        var init_piece=[1,2,3,2,1];
-
-        for(var i=0;i<this.size[1];i++){
-            this.f[0][i]=new Piece(0,init_piece[i],init_state[0][i],i,0);
-            this.f[this.size[0]-1][i]=new Piece(1,init_piece[i],init_state[1][i],i,this.size[0]-1);
+    init(){
+        var init_piece=[[2,3,4,3,2],[1,1,1,1,1]];
+        var init_state=[];
+        for(var i=0;i<init_piece.length;i++){
+            var s0=arrayShuffle(arrayCreate(0,9));
+            var s1=[s0.slice(0,5),s0.slice(5)]
+            init_state.push(s1)
         }
+
+        for(var i=0;i<init_piece.length;i++){
+            for(var j=0;j<this.size[1];j++){
+                this.f[i][j]=new Piece(0,init_piece[i][j],init_state[0][i][j],j,i);
+                this.f[this.size[0]-i-1][j]=new Piece(1,init_piece[i][j],init_state[1][i][j],j,this.size[0]-i-1);
+            }
+        }
+
     }
 
     move(x,y,mx,my){
@@ -104,7 +102,7 @@ class Field{
     }
 
     isFieldRange(x,y){
-        return (x>=0&&y>=0&&x<this.size[0]&&y<this.size[1])
+        return (x>=0&&y>=0&&x<this.size[1]&&y<this.size[0])
     }
 
     console_print(){
@@ -119,11 +117,11 @@ class Field{
         }
     }
 
-    isPieceC(){
+    isPieceA(){
         var flags=[false,false];
         for(var i=0;i<this.size[0];i++){
             for(var j=0;j<this.size[1];j++){
-                if(this.f[i][j].type==3){
+                if(this.f[i][j].type==4){
                     flags[this.f[i][j].turn]=true
                 }
             }
@@ -142,7 +140,7 @@ class Field{
         for(var i=0;i<this.size[0];i++){
             content+="<tr>"
             for(var j=0;j<this.size[1];j++){
-                content+=("<td><button id='cell_"+i+"_"+j+"' style='width:50px;height:50px;' onclick=btnClick("+i+","+j+")>"+this.f[i][j]+"</button></td>")
+                content+=("<td><button id='cell_"+i+"_"+j+"' class='cell' onclick=btnClick("+i+","+j+")>"+this.f[i][j]+"</button></td>")
             }
             content+="</tr>"
         }
@@ -169,6 +167,7 @@ class Piece{
 
     isVec(dx,dy){
         var is_move_array=[
+            [[false,false,false],[true,false,true],[false,false,false]],
             [[false,true,false],[true,false,true],[false,true,false]],
             [[true,false,true],[false,false,false],[true,false,true]],
             [[true,true,true],[true,false,true],[true,true,true]]
@@ -182,11 +181,13 @@ class Piece{
             case 0:
                 return ' '
             case 1:
-                return 'A'
+                return 'D'
             case 2:
-                return 'B'
-            case 3:
                 return 'C'
+            case 3:
+                return 'B'
+            case 4:
+                return 'A'
         }
     }
 
