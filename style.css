@@ -23,7 +23,8 @@ tr{
 
 .color0{
     background-color: #EEAAAA;
-    transform:scale(-1,-1);
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
 }
 
 .color1{
