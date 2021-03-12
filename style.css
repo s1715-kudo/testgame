@@ -23,6 +23,7 @@ tr{
 
 .color0{
     background-color: #EEAAAA;
+    transform:scale(-1,-1);
 }
 
 .color1{
