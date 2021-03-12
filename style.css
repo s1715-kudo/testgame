@@ -14,12 +14,32 @@ tr{
 }
 
 .cell{
-    vertical-align: top;
     width:50px;
     height:50px;
     border-radius:0;
     border: solid 1px #000000;
     outline: none;
+}
+
+.cell_body {
+    position: relative;
+    margin:0;
+    padding:0;
+}
+
+.cell_body p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    margin:0;
+    padding:0;
+}
+  
+.cell_body img {
+    width: 100%;
 }
 
 .colord{
@@ -38,13 +58,16 @@ tr{
 }
 
 .cell_select{
-    border: 5px solid #444444;
+    outline: 5px solid #444444;
+    outline-offset: -5px;
 }
 
 .cell_select0{
-    border: 5px solid #884444;
+    outline: 5px solid #884444;
+    outline-offset: -5px;
 }
 
 .cell_select1{
-    border: 5px solid #444488;
+    outline: 5px solid #444488;
+    outline-offset: -5px;
 }

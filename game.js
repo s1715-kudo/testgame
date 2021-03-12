@@ -174,7 +174,7 @@ class Field{
                         break;
                 }
 
-                content+=("<td><button id='cell_"+i+"_"+j+"' class='cell "+c_color+"' onclick=btnClick("+i+","+j+")>"+this.f[i][j]+"</button></td>")
+                content+=("<td><button id='cell_"+i+"_"+j+"' class='cell "+c_color+"' onclick=btnClick("+i+","+j+")><div class='cell_body'><img id='cell_img_"+i+"_"+j+"' src='img/"+this.f[i][j].type+".png' /><p>"+this.f[i][j].toString().slice(1)+"</p></div></button></td>")
             }
             content+="</tr>"
         }

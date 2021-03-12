@@ -10,6 +10,7 @@ function btnClick(i,j){
             var cell_select_str="cell_select"
             cell_select_str+=gamefield.turn;
             document.getElementById("cell_"+i+"_"+j).classList.add(cell_select_str)
+            document.getElementById("cell_img_"+i+"_"+j).classList.add("cell_select_img")
         }
         else{
             gamefield.move(btnClickPlace[1],btnClickPlace[0],j,i)
