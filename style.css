@@ -15,6 +15,7 @@ tr{
     height:50px;
     border-radius:0;
     border: solid 1px #000000;
+    outline: none;
 }
 
 .colord{
@@ -25,8 +26,13 @@ tr{
     background-color: #EEAAAA;
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
+    
 }
 
 .color1{
     background-color: #AAAAEE;
+}
+
+.cell_select{
+    border: 5px solid #444444;
 }
