@@ -16,13 +16,13 @@ function btnClick(i,j){
             gamefield.display("message","game")
             switch(gamefield.isPieceA()){
                 case 0:
-                    document.getElementById("message").innerHTML="1の勝ち"
+                    document.getElementById("message").innerHTML="WIN 1"
                     break;
                 case 1:
-                    document.getElementById("message").innerHTML="2の勝ち"
+                    document.getElementById("message").innerHTML="WIN 2"
                     break;
                 case -2:
-                    document.getElementById("message").innerHTML="引き分け"
+                    document.getElementById("message").innerHTML="DRAW"
                     break;
             }
         }

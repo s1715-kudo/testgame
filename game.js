@@ -179,7 +179,7 @@ class Field{
             content+="</tr>"
         }
         content+="</table>"
-		document.getElementById(idm).innerHTML="turn:"+(this.turn+1)
+		document.getElementById(idm).innerHTML="TURN "+(this.turn+1)
 		document.getElementById(idg).innerHTML=content;
     }
 }
