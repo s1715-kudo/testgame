@@ -7,7 +7,9 @@ function btnClick(i,j){
         if(!btnClickFlag){
             btnClickPlace[0]=i;
             btnClickPlace[1]=j;
-            document.getElementById("cell_"+i+"_"+j).classList.add("cell_select")
+            var cell_select_str="cell_select"
+            cell_select_str+=gamefield.turn;
+            document.getElementById("cell_"+i+"_"+j).classList.add(cell_select_str)
         }
         else{
             gamefield.move(btnClickPlace[1],btnClickPlace[0],j,i)
