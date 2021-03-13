@@ -26,12 +26,27 @@ function arrayShuffle(array){
     return newArray
 }
 
+function arrayRotate(array2d){
+    var newArray2d = newArray2d = new Array(array2d.length);
+    for(var i=0;i<newArray2d.length;i++){
+        newArray2d[i]=new Array(array2d[i].length);
+    }
+
+    for(var i=0;i<array2d.length;i++){
+        for(var j=0;j<array2d[i].length;j++){
+            newArray2d[i][j]=array2d[array2d.length-1-i][array2d[i].length-1-j]
+        }
+    }
+    return newArray2d
+}
+
 class Field{
     f=[];
     size=[];
     turn=0;
+    MAX_STATE=14
     constructor(){
-        this.size=[7,5];
+        this.size=[10,5];
         this.turn=0;
         
         for(var i=0;i<this.size[0];i++){
@@ -45,18 +60,20 @@ class Field{
     }
 
     init(){
-        var init_piece=[[2,3,4,3,2],[1,1,1,1,1]];
+        var init_piece=[[5,7,4,7,5],[2,3,6,3,2],[1,1,1,1,1]];
+        var init_piecer=arrayRotate(init_piece)
+        var height2=this.size[0]-init_piece.length
         var init_state=[];
         for(var i=0;i<init_piece.length;i++){
-            var s0=arrayShuffle(arrayCreate(0,9));
-            var s1=[s0.slice(0,5),s0.slice(5)]
+            var s0=arrayShuffle(arrayCreate(0,this.MAX_STATE));
+            var s1=[s0.slice(0,5),s0.slice(5,10),s0.slice(10)]
             init_state.push(s1)
         }
 
         for(var i=0;i<init_piece.length;i++){
             for(var j=0;j<this.size[1];j++){
                 this.f[i][j]=new Piece(0,init_piece[i][j],init_state[0][i][j],j,i,false);
-                this.f[this.size[0]-i-1][j]=new Piece(1,init_piece[i][j],init_state[1][i][j],j,this.size[0]-i-1,false);
+                this.f[i+height2][j]=new Piece(1,init_piecer[i][j],init_state[1][i][j],j,i+height2,false);
             }
         }
 
@@ -71,10 +88,14 @@ class Field{
                 ntype=2
                 nbflag=true;
             }
-            else if(ntype==2||ntype==3){
+            else if(ntype==5){
+                ntype=6
+                nbflag=true;
+            }
+            else if(ntype==2||ntype==3||ntype==6||ntype==7){
                 nstate+=2
-                if(nstate>9){
-                    nstate=9
+                if(nstate>this.MAX_STATE){
+                    nstate=this.MAX_STATE
                 }
                 nbflag=true;
             }
@@ -98,7 +119,7 @@ class Field{
                         else if(p0.turn!=p.turn){
                             if(p0.state<p.state){
                                 p.state++
-                                if(p.state>9)p.state=9
+                                if(p.state>this.MAX_STATE)p.state=this.MAX_STATE
                                 this.stdMove(x,y,mx,my,p);
                                 this.turn=(this.turn+1)%2
                                 return true
@@ -206,8 +227,17 @@ class Piece{
             [[false,false,false],[true,false,true],[false,false,false]],
             [[false,true,false],[true,false,true],[false,true,false]],
             [[true,false,true],[false,false,false],[true,false,true]],
-            [[true,true,true],[true,false,true],[true,true,true]]
+            [[true,true,true],[true,false,true],[true,true,true]],
+            
+            [[true,false,false],[true,false,true],[true,false,false]],
+            [[true,true,false],[true,false,true],[true,true,false]],
+            [[false,true,true],[true,false,false],[false,true,true]]
         ]
+        if(this.turn==0){
+            for(var i=0;i<is_move_array.length;i++){
+                is_move_array[i]=arrayRotate(is_move_array[i])
+            }
+        }
         if(dx>1&&dy>1&&dx<-1&&dy<-1)return false;
         else return is_move_array[this.type-1][dx][dy];
     }
@@ -224,6 +254,12 @@ class Piece{
                 return 'B'
             case 4:
                 return 'A'
+            case 5:
+                return 'Y'
+            case 6:
+                return 'X'
+            case 7:
+                return 'Z'
         }
     }
 
