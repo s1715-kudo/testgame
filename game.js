@@ -31,7 +31,7 @@ class Field{
     size=[];
     turn=0;
     constructor(){
-        this.size=[10,5];
+        this.size=[7,5];
         this.turn=0;
         
         for(var i=0;i<this.size[0];i++){
