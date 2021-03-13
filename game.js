@@ -60,7 +60,7 @@ class Field{
     }
 
     init(){
-        var init_piece=[[5,7,4,7,5],[2,3,6,3,2],[1,1,1,1,1]];
+        var init_piece=[[5,7,4,7,5],[2,3,6,3,2],[8,8,1,8,8]];
         var init_piecer=arrayRotate(init_piece)
         var height2=this.size[0]-init_piece.length
         var init_state=[];
@@ -83,25 +83,36 @@ class Field{
         var ntype=p.type
         var nstate=p.state
         var nbflag=p.bflag
-        if(!nbflag&&((p.turn==0&&my==this.size[0]-1)||(p.turn==1&&my==0))){
-            if(ntype==1){
+        if(!nbflag&&this.isEnemyPosition(my,p)){
+            if(ntype==1||ntype==8){
                 ntype=2
-                nbflag=true;
             }
-            else if(ntype==5){
+            else if(ntype==2||ntype==5){
                 ntype=6
-                nbflag=true;
             }
-            else if(ntype==2||ntype==3||ntype==6||ntype==7){
+            else if(ntype==3){
+                ntype=7
+            }
+            else if(ntype==6||ntype==7){
                 nstate+=2
                 if(nstate>this.MAX_STATE){
                     nstate=this.MAX_STATE
                 }
-                nbflag=true;
             }
+            nbflag=true;
         }
         this.f[my][mx]=new Piece(p.turn,ntype,nstate,mx,my,nbflag);
         this.f[y][x]=new Piece(null,0,null,x,y,false);
+    }
+
+    isEnemyPosition(my,p){
+        var heightRange=3
+        if(p.turn==0){  
+            return (my>=this.size[0]-heightRange && my<this.size[0])
+        }
+        else if(p.turn==1){
+            return (my>=0 && my<heightRange)
+        }
     }
 
     move(x,y,mx,my){
@@ -230,7 +241,8 @@ class Piece{
             [[true,true,true],[true,false,true],[true,true,true]],
             [[true,false,false],[true,false,true],[true,false,false]],
             [[true,true,false],[true,false,true],[true,true,false]],
-            [[false,true,true],[true,false,false],[false,true,true]]
+            [[true,false,true],[true,false,false],[true,false,true]],
+            [[false,false,false],[true,false,false],[false,false,false]]
         ]
         if(this.turn==0){
             for(var i=0;i<is_move_array.length;i++){
@@ -259,6 +271,8 @@ class Piece{
                 return 'X'
             case 7:
                 return 'Z'
+            case 8:
+                return 'E'
         }
     }
 
