@@ -13,24 +13,68 @@ function btnClick(i,j){
             document.getElementById("cell_img_"+i+"_"+j).classList.add("cell_select_img")
         }
         else{
-            gamefield.move(btnClickPlace[1],btnClickPlace[0],j,i)
+            gamefield.move(btnClickPlace[1],btnClickPlace[0],j,i,true)
             gamefield.display("message","game")
-            switch(gamefield.isPieceA()){
-                case 0:
-                    document.getElementById("message").innerHTML="WIN 1"
-                    break;
-                case 1:
-                    document.getElementById("message").innerHTML="WIN 2"
-                    break;
-                case -2:
-                    document.getElementById("message").innerHTML="DRAW"
-                    break;
-            }
+            var fin_flag=fin()
+            if(!fin_flag)randMove();
         }
         btnClickFlag=!btnClickFlag
     }
 }
 
-window.onload = function(){
-    gamefield.display("message","game")
+function fin(){
+    var fin_flag=gamefield.isPieceA()
+    if(fin_flag!=-1){
+        gamefield.setFinRecord(fin_flag)
+        switch(fin_flag){
+            case 0:
+                document.getElementById("message").innerHTML="WIN 1"
+                break;
+            case 1:
+                document.getElementById("message").innerHTML="WIN 2"
+                break;
+            case -2:
+                document.getElementById("message").innerHTML="DRAW"
+                break;
+        }
+    }
+    return fin_flag!=-1;
 }
+
+function randMove(){
+    if(gamefield.turn==0&&randMoveFlag[0]||gamefield.turn==1&&randMoveFlag[1]){
+        gamefield.randSelectMove()
+        gamefield.display("message","game")
+    }
+    return fin()
+}
+
+function getParam(name, url) {
+	if (!url) url = window.location.href;
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function setKeyinit(key,value){
+	var url_key=getParam(key);
+	if(url_key==null)url_key=value;
+	else if((typeof value)=="number")url_key=Number(url_key);
+	return url_key;
+}
+
+var randMoveFlag=[setKeyinit('1p',false),setKeyinit('2p',false)]
+
+window.addEventListener('load', function(){
+    gamefield.display("message","game")
+    randMove();
+    if(randMoveFlag[0]&&randMoveFlag[1]){
+        var fin_flag=false
+        while(!fin_flag){
+            fin_flag=randMove()
+        }
+    }
+});

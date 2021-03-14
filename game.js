@@ -45,6 +45,9 @@ class Field{
     size=[];
     turn=0;
     MAX_STATE=14
+    record=[];
+    SAVE_RECORD=true
+
     constructor(){
         this.size=[10,5];
         this.turn=0;
@@ -57,6 +60,7 @@ class Field{
             this.f.push(f0);
         }
         this.init()
+        this.setRecord(null,null,null,null)
     }
 
     init(){
@@ -115,7 +119,8 @@ class Field{
         }
     }
 
-    move(x,y,mx,my){
+    move(x,y,mx,my,moveflag){
+        var rflag=false
         if(this.isFieldRange(x,y)&&this.isFieldRange(mx,my)){
             var p=this.f[y][x];
             var p0=this.f[my][mx];
@@ -123,35 +128,60 @@ class Field{
                 if(p.turn==this.turn){
                     if(p.isVec(mx-x+1,my-y+1)){
                         if(p0.type==0){
-                            this.stdMove(x,y,mx,my,p);
-                            this.turn=(this.turn+1)%2
-                            return true
+                            if(moveflag){
+                                this.stdMove(x,y,mx,my,p);
+                                this.turn=(this.turn+1)%2
+                            }
+                            rflag=true
                         }
                         else if(p0.turn!=p.turn){
                             if(p0.state<p.state){
-                                p.state++
-                                if(p.state>this.MAX_STATE)p.state=this.MAX_STATE
-                                this.stdMove(x,y,mx,my,p);
-                                this.turn=(this.turn+1)%2
-                                return true
+                                if(moveflag){
+                                    p.state++
+                                    if(p.state>this.MAX_STATE)p.state=this.MAX_STATE
+                                    this.stdMove(x,y,mx,my,p);
+                                    this.turn=(this.turn+1)%2
+                                }
+                                rflag=true
                             }
                             else if(p0.state==p.state){
-                                this.f[my][mx]=new Piece(null,0,null,mx,my);
-                                this.f[y][x]=new Piece(null,0,null,x,y);
-                                this.turn=(this.turn+1)%2
-                                return true
+                                if(moveflag){
+                                    this.f[my][mx]=new Piece(null,0,null,mx,my);
+                                    this.f[y][x]=new Piece(null,0,null,x,y);
+                                    this.turn=(this.turn+1)%2
+                                }
+                                rflag=true
                             }
-                            else return false
                         }
-                        else return false
                     }
-                    else return false
                 }
-                else return false
             }
-            else return false
         }
-        else return false
+        if(rflag&&moveflag)this.setRecord(x,y,mx,my)
+        return rflag
+    }
+
+    mobilePieceList(){
+        var mlist=[]
+        for(var i=0;i<this.size[0];i++){
+            for(var j=0;j<this.size[1];j++){
+                for(var k=0;k<this.size[0];k++){
+                    for(var l=0;l<this.size[1];l++){
+                        var mflag=this.move(j,i,l,k,false)
+                        if(mflag){
+                            mlist.push([j,i,l,k])
+                        }                       
+                    }
+                }                
+            }
+        }
+        return mlist
+    }
+
+    randSelectMove(){
+        var mlist=this.mobilePieceList()
+        var slist=mlist[Math.floor(Math.random()*mlist.length)]
+        this.move(slist[0],slist[1],slist[2],slist[3],true)
     }
 
     isFieldRange(x,y){
@@ -213,6 +243,47 @@ class Field{
         content+="</table>"
 		document.getElementById(idm).innerHTML="TURN "+(this.turn+1)
 		document.getElementById(idg).innerHTML=content;
+    }
+
+    setRecord(x,y,mx,my){
+        if(this.SAVE_RECORD){
+            var record0=[];
+            var f_array=[]
+            for(var i=0;i<this.size[0];i++){
+                var f_array0=[];
+                for(var j=0;j<this.size[1];j++){
+                    var f_array1=[];
+                    var f0=this.f[i][j]
+                    f_array1["type"]=f0.typeStr()
+                    f_array1["state"]=f0.state
+                    f_array1["turn"]=f0.turn
+                    f_array0.push(f_array1);
+                }
+                f_array.push(f_array0)
+            }
+            record0["field"]=f_array;
+            if(x!=null&&y!=null&&mx!=null&&my!=null){
+                var p=this.record[this.record.length-1]["field"][y][x]
+                var p_array=[];
+                p_array["x"]=x;
+                p_array["y"]=y;
+                p_array["mx"]=mx;
+                p_array["my"]=my;
+                p_array["piece"]=p
+                record0["move"]=p_array;
+            }
+            record0["win"]=null;
+            this.record.push(record0)
+        }
+    }
+
+    setFinRecord(fin_state){
+        if(this.SAVE_RECORD){
+            for(var i=0;i<this.record.length;i++){
+                this.record[i]["win"]=fin_state
+            }
+            console.log(this.record)
+        }
     }
 }
 
