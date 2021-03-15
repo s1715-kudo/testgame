@@ -283,11 +283,7 @@ class Field{
                 this.record[i]["win"]=fin_state
                 this.record[i]["fin_length"]=this.record.length
             }
-            $.ajax({
-                url: "https://raw.githubusercontent.com/s1715-kudo/testgame/master/save.py",
-                type: 'post',
-                data: JSON.stringify(this.record,undefined," ")
-            });
+            console.log(JSON.stringify(this.record,undefined," "))
       
         }
     }
