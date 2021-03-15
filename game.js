@@ -283,8 +283,10 @@ class Field{
                 this.record[i]["win"]=fin_state
                 this.record[i]["fin_length"]=this.record.length
             }
-            console.log(JSON.stringify(this.record,undefined," "))
-      
+            var output_result_flag=(setKeyinit('output_result',"false")=="true")
+            if(output_result_flag){
+                document.getElementById("output").innerHTML=JSON.stringify(this.record,undefined," ")
+            }
         }
     }
 }

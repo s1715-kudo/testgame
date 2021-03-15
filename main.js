@@ -66,7 +66,7 @@ function setKeyinit(key,value){
 	return url_key;
 }
 
-var randMoveFlag=[setKeyinit('1p',false),setKeyinit('2p',false)]
+var randMoveFlag=[setKeyinit('1p',"false")=="true",setKeyinit('2p',"false")=="true"]
 
 window.addEventListener('load', function(){
     gamefield.display("message","game")
