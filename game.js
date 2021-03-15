@@ -284,7 +284,7 @@ class Field{
                 this.record[i]["fin_length"]=this.record.length
             }
             $.ajax({
-                url: "save.py",
+                url: "https://raw.githubusercontent.com/s1715-kudo/testgame/master/save.py",
                 type: 'post',
                 data: JSON.stringify(this.record,undefined," ")
             });
