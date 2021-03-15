@@ -247,23 +247,23 @@ class Field{
 
     setRecord(x,y,mx,my){
         if(this.SAVE_RECORD){
-            var record0=[];
-            var f_array=[]
+            var record0={};
+            var f_array={}
             for(var i=0;i<this.size[0];i++){
                 var f_array0=[];
                 for(var j=0;j<this.size[1];j++){
-                    var f_array1=[];
+                    var f_array1={};
                     var f0=this.f[i][j]
                     f_array1["type"]=f0.typeStr()
                     f_array1["state"]=f0.state
                     f_array1["turn"]=f0.turn
-                    f_array0.push(f_array1);
+                    f_array0[j.toString()]=f_array1;
                 }
-                f_array.push(f_array0)
+                f_array[i.toString()]=f_array0
             }
             record0["field"]=f_array;
             if(x!=null&&y!=null&&mx!=null&&my!=null){
-                var p=this.record[this.record.length-1]["field"][y][x]
+                var p=this.record[(this.record.length-1)]["field"][y][x]
                 var p_array=[];
                 p_array["x"]=x;
                 p_array["y"]=y;
@@ -281,8 +281,14 @@ class Field{
         if(this.SAVE_RECORD){
             for(var i=0;i<this.record.length;i++){
                 this.record[i]["win"]=fin_state
+                this.record[i]["fin_length"]=this.record.length
             }
-            console.log(this.record)
+            $.ajax({
+                url: "save.py",
+                type: 'post',
+                data: JSON.stringify(this.record,undefined," ")
+            });
+      
         }
     }
 }
