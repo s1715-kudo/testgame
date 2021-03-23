@@ -284,7 +284,7 @@ class Field{
                 this.record[i]["win"]=fin_state
                 this.record[i]["fin_length"]=this.record.length
             }
-            document.getElementById("output").innerHTML=JSON.stringify(this.record,undefined," ")
+            document.getElementById("output_div").innerHTML=("<div id='output'>"+JSON.stringify(this.record,undefined," ")+"</div>")
         }
     }
 }

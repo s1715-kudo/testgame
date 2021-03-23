@@ -24,14 +24,15 @@ function btnClick(i,j){
 
 function fin(){
     var fin_flag=gamefield.isPieceA()
+    var c_top="<a href='index.html'>トップに戻る</a>"
     if(fin_flag!=-1){
         gamefield.setFinRecord(fin_flag)
         switch(fin_flag){
             case 0:
-                document.getElementById("message").innerHTML="WIN 1"
+                document.getElementById("message").innerHTML="WIN 1　"+c_top
                 break;
             case 1:
-                document.getElementById("message").innerHTML="WIN 2"
+                document.getElementById("message").innerHTML="WIN 2　"+c_top
                 break;
             case -2:
                 document.getElementById("message").innerHTML="DRAW"
