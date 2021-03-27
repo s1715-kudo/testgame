@@ -215,6 +215,9 @@ class Field{
         else if(flags[0]&&!flags[1])r=0
         else if(!flags[0]&&flags[1])r=1
         else r=-2;
+        if(this.mobilePieceList().length==0){
+            r=(this.turn+1)%2
+        }
         return r
     }
 
