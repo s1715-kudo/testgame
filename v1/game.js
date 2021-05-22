@@ -44,12 +44,12 @@ class Field{
     f=[];
     size=[];
     turn=0;
-    MAX_STATE=10
+    MAX_STATE=14
     record=[];
     SAVE_RECORD=true
 
     constructor(){
-        this.size=[10,7];
+        this.size=[10,5];
         this.turn=0;
         this.SAVE_RECORD=(setKeyinit('output_result',"false")=="true")
         
@@ -65,16 +65,16 @@ class Field{
     }
 
     init(){
-        var init_piece=[[5,7,6,4,6,7,5],[5,2,3,9,3,2,5],[8,8,10,1,10,8,8]];
+        var init_piece=[[5,7,4,7,5],[2,3,6,3,2],[8,8,1,8,8]];
         var init_piecer=arrayRotate(init_piece)
         var height2=this.size[0]-init_piece.length
         var init_state=[];
-        for(var i=0;i<2;i++){
-            var s0=Array(this.size[1]).fill(0);
-            var s1=Array(s0.length).fill(s0);
-            
+        for(var i=0;i<init_piece.length;i++){
+            var s0=arrayShuffle(arrayCreate(0,this.MAX_STATE));
+            var s1=[s0.slice(0,5),s0.slice(5,10),s0.slice(10)]
             init_state.push(s1)
         }
+
         for(var i=0;i<init_piece.length;i++){
             for(var j=0;j<this.size[1];j++){
                 this.f[i][j]=new Piece(0,init_piece[i][j],init_state[0][i][j],j,i,false);
@@ -89,7 +89,7 @@ class Field{
         var nstate=p.state
         var nbflag=p.bflag
         if(!nbflag&&this.isEnemyPosition(my,p)){
-            if(ntype==1||ntype==8||ntype==10){
+            if(ntype==1||ntype==8){
                 ntype=2
             }
             else if(ntype==2||ntype==5){
@@ -98,12 +98,11 @@ class Field{
             else if(ntype==3){
                 ntype=7
             }
-            else if(ntype==6){
-                ntype=9
-            }
-            nstate+=2
-            if(nstate>this.MAX_STATE){
-                nstate=this.MAX_STATE
+            else if(ntype==6||ntype==7){
+                nstate+=2
+                if(nstate>this.MAX_STATE){
+                    nstate=this.MAX_STATE
+                }
             }
             nbflag=true;
         }
@@ -137,11 +136,19 @@ class Field{
                             rflag=true
                         }
                         else if(p0.turn!=p.turn){
-                            if(p0.state<=p.state){
+                            if(p0.state<p.state){
                                 if(moveflag){
                                     p.state++
                                     if(p.state>this.MAX_STATE)p.state=this.MAX_STATE
                                     this.stdMove(x,y,mx,my,p);
+                                    this.turn=(this.turn+1)%2
+                                }
+                                rflag=true
+                            }
+                            else if(p0.state==p.state){
+                                if(moveflag){
+                                    this.f[my][mx]=new Piece(null,0,null,mx,my);
+                                    this.f[y][x]=new Piece(null,0,null,x,y);
                                     this.turn=(this.turn+1)%2
                                 }
                                 rflag=true
@@ -180,6 +187,18 @@ class Field{
 
     isFieldRange(x,y){
         return (x>=0&&y>=0&&x<this.size[1]&&y<this.size[0])
+    }
+
+    console_print(){
+        console.log("　   1   2   3   4   5 ")
+        console.log("   --------------------")
+        for(var i=0;i<this.size[0];i++){
+            var str=i+1+" | ";
+            for(var j=0;j<this.size[1];j++){
+                str+=this.f[i][j]+" "
+            }
+            console.log(str)
+        }
     }
 
     isPieceA(){
@@ -299,9 +318,7 @@ class Piece{
             [[true,false,false],[true,false,true],[true,false,false]],
             [[true,true,false],[true,false,true],[true,true,false]],
             [[true,false,true],[true,false,false],[true,false,true]],
-            [[false,false,false],[true,false,false],[false,false,false]],
-            [[true,true,true],[true,false,true],[true,true,true]],
-            [[true,false,false],[true,false,false],[true,false,false]]
+            [[false,false,false],[true,false,false],[false,false,false]]
         ]
         if(this.turn==0){
             for(var i=0;i<is_move_array.length;i++){
@@ -332,10 +349,6 @@ class Piece{
                 return 'Z'
             case 8:
                 return 'E'
-            case 9:
-                return 'W'
-            case 10:
-                return 'F'
         }
     }
 
