@@ -49,7 +49,7 @@ class Field{
     SAVE_RECORD=true
 
     constructor(){
-        this.size=[10,7];
+        this.size=[11,9];
         this.turn=0;
         this.SAVE_RECORD=(setKeyinit('output_result',"false")=="true")
         
@@ -65,20 +65,18 @@ class Field{
     }
 
     init(){
-        var init_piece=[[5,7,6,4,6,7,5],[5,2,3,9,3,2,5],[8,8,10,1,10,8,8]];
+        var init_piece=[[5,11,7,6,4,6,7,11,5],[2,0,3,0,9,0,3,0,2],[8,8,8,10,1,10,8,8,8]];
         var init_piecer=arrayRotate(init_piece)
         var height2=this.size[0]-init_piece.length
-        var init_state=[];
-        for(var i=0;i<2;i++){
-            var s0=Array(this.size[1]).fill(0);
-            var s1=Array(s0.length).fill(s0);
-            
-            init_state.push(s1)
-        }
+        
         for(var i=0;i<init_piece.length;i++){
             for(var j=0;j<this.size[1];j++){
-                this.f[i][j]=new Piece(0,init_piece[i][j],init_state[0][i][j],j,i,false);
-                this.f[i+height2][j]=new Piece(1,init_piecer[i][j],init_state[1][i][j],j,i+height2,false);
+                if(init_piece[i][j]!=0){
+                    this.f[i][j]=new Piece(0,init_piece[i][j],0,j,i,false);
+                }
+                if(init_piecer[i][j]!=0){
+                    this.f[i+height2][j]=new Piece(1,init_piecer[i][j],0,j,i+height2,false);
+                }
             }
         }
 
@@ -92,7 +90,7 @@ class Field{
             if(ntype==1||ntype==8||ntype==10){
                 ntype=2
             }
-            else if(ntype==2||ntype==5){
+            else if(ntype==2||ntype==5||ntype==11){
                 ntype=6
             }
             else if(ntype==3){
@@ -301,7 +299,8 @@ class Piece{
             [[true,false,true],[true,false,false],[true,false,true]],
             [[false,false,false],[true,false,false],[false,false,false]],
             [[true,true,true],[true,false,true],[true,true,true]],
-            [[true,false,false],[true,false,false],[true,false,false]]
+            [[true,false,false],[true,false,false],[true,false,false]],
+            [[true,true,false],[false,false,true],[true,true,false]]
         ]
         if(this.turn==0){
             for(var i=0;i<is_move_array.length;i++){
@@ -336,6 +335,8 @@ class Piece{
                 return 'W'
             case 10:
                 return 'F'
+            case 11:
+                return 'V'
         }
     }
 
